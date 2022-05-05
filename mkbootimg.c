@@ -122,6 +122,7 @@ char* read_value_from_file(char *preffix, void *value)
     char *file_name      = malloc(file_name_len);
     char *data           = NULL;
     int fd               = 0;
+    int second_fd        = 0;
 
     memset(file_name, 0, file_name_len);
     strcat(file_name, preffix);
@@ -129,14 +130,12 @@ char* read_value_from_file(char *preffix, void *value)
     strcat(file_name, value);
 
     if(!strcmp(value, "kernel")
-        || !strcmp(value, "ramdisk")
-        || !strcmp(value, "second")) {
+        || !strcmp(value, "ramdisk")) {
         return file_name;
     }
 
     fd = open(file_name, O_RDONLY);
     if(fd < 0) {
-        fprintf(stdout, "warning: could not open file %s\n", file_name);
         free(file_name);
         return NULL;
     }
