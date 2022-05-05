@@ -113,7 +113,7 @@ int parse_os_patch_level(char *lvl)
  * @value: this is the name of the parameter itself
  * (ex.: kernel, ramdisk_offset, etc.).
  */
-char* read_value_from_file(char *preffix, void *value)
+char* read_value_from_file(char *preffix, char *value)
 {
     size_t preffix_len   = strlen(preffix);
     size_t value_len     = strlen(value);
@@ -122,15 +122,28 @@ char* read_value_from_file(char *preffix, void *value)
     char *file_name      = malloc(file_name_len);
     char *data           = NULL;
     int fd               = 0;
+    int second_fd        = 0;
 
     memset(file_name, 0, file_name_len);
-    strcat(file_name, preffix);
-    strcat(file_name, "-");
-    strcat(file_name, value);
+    memcpy(file_name, preffix, preffix_len);
+    memcpy(file_name + preffix_len, "-", 1);
+    memcpy(file_name + preffix_len + 1, value, value_len);
 
     if(!strcmp(value, "kernel")
         || !strcmp(value, "ramdisk")) {
         return file_name;
+    }
+
+    if(!strcmp(value, "second")) {
+        second_fd = open(file_name, O_RDONLY);
+        if(second_fd < 0) {
+            close(second_fd);
+            free(file_name);
+            return NULL;
+        } else {
+            close(second_fd);
+            return file_name;
+        }
     }
 
     fd = open(file_name, O_RDONLY);
