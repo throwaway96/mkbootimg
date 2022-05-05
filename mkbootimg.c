@@ -122,7 +122,6 @@ char* read_value_from_file(char *preffix, void *value)
     char *file_name      = malloc(file_name_len);
     char *data           = NULL;
     int fd               = 0;
-    int second_fd        = 0;
 
     memset(file_name, 0, file_name_len);
     strcat(file_name, preffix);
