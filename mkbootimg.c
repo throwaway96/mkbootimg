@@ -129,12 +129,9 @@ char* read_value_from_file(char *preffix, char *value)
     memcpy(file_name + preffix_len, "-", 1);
     memcpy(file_name + preffix_len + 1, value, value_len);
 
-    if(!strcmp(value, "kernel")
-        || !strcmp(value, "ramdisk")) {
-        return file_name;
-    }
-
-    if(!strcmp(value, "second")) {
+    if(!strcmp(value, "second")
+       || !strcmp(value, "kernel")
+       || !strcmp(value, "ramdisk")) {
         second_fd = open(file_name, O_RDONLY);
         if(second_fd < 0) {
             close(second_fd);
