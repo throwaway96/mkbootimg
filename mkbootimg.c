@@ -518,7 +518,7 @@ int main(int argc, char **argv)
                 os_patch_level = parse_os_patch_level(val);
             } else if(!strcmp(arg, "--board") && temp_board == NULL) {
                 board = val;
-            } else if(!strcmp(arg,"--pagesize") && pagesize == 0) {
+            } else if(!strcmp(arg,"--pagesize")) {
                 pagesize = strtoul(val, 0, 10);
             } else if(!strcmp(arg, "--header_version")) {
                 header_version = strtoul(val, 0, 10);
