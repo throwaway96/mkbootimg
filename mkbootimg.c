@@ -564,7 +564,7 @@ int main(int argc, char **argv)
                 && (pagesize != 8192) && (pagesize != 16384)
                 && (pagesize != 32768) && (pagesize != 65536)
                 && (pagesize != 131072)) {
-                fprintf(stderr, "error: unsupported pagesize %lu\n", pagesize);
+                fprintf(stderr, "error: unsupported pagesize %u\n", pagesize);
                 close(fd);
                 return 1;
             }
