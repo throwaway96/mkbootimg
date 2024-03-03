@@ -31,11 +31,12 @@ static void *load_file(const char *fn, unsigned *_sz)
     int fd = open(fn, O_RDONLY);
     if(fd < 0) return 0;
 
+    char *data = 0;
+
     int sz = lseek(fd, 0, SEEK_END);
     if(sz < 0) goto oops;
     if(lseek(fd, 0, SEEK_SET) != 0) goto oops;
 
-    char *data = 0;
     data = (char *)malloc(sz);
     if(data == 0) goto oops;
 
