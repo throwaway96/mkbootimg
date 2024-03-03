@@ -44,26 +44,34 @@ int read_padding(FILE *f, unsigned itemsize)
 void write_string_to_file(const char *name, const char *string)
 {
     char file[PATH_MAX];
-    sprintf(file, "%s/%s-%s", directory, basename(filename), name);
+    snprintf(file, sizeof(file), "%s/%s-%s", directory, basename(filename), name);
     FILE *t = fopen(file, "w");
+    if (t == NULL) {
+        fprintf(stderr, "Could not open string output file %s: %s\n", file, strerror(errno));
+        return;
+    }
     if(debug > 0) fprintf(stderr, "%s...\n", name);
-    fwrite(string, strlen(string), 1, t);
-    fwrite("\n", 1, 1, t);
+    fputs(string, t);
+    fputc('\n', t);
     fclose(t);
 }
 
 void write_buffer_to_file(const char *name, FILE *f, const int size)
 {
     char file[PATH_MAX];
-    sprintf(file, "%s/%s-%s", directory, basename(filename), name);
+    snprintf(file, sizeof(file), "%s/%s-%s", directory, basename(filename), name);
     FILE *t = fopen(file, "wb");
     byte *buf = (byte *)malloc(size);
     if(debug > 0) fprintf(stderr, "Reading %s...\n", name);
     if(fread(buf, size, 1, f)) {};
     total_read += size;
     if(debug > 1) fprintf(stderr, "read: %d\n", size);
-    fwrite(buf, size, 1, t);
-    fclose(t);
+    if (t != NULL) {
+        fwrite(buf, size, 1, t);
+        fclose(t);
+    } else {
+        fprintf(stderr, "Could not open buffer output file %s: %s\n", file, strerror(errno));
+    }
     free(buf);
     total_read += read_padding(f, size);
 }
