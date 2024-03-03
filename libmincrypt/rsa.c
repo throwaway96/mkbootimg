@@ -29,6 +29,8 @@
 #include "mincrypt/sha.h"
 #include "mincrypt/sha256.h"
 
+#include <assert.h>
+
 // a[] -= mod
 static void subM(const RSAPublicKey* key,
                  uint32_t* a) {
@@ -252,7 +254,6 @@ int RSA_verify(const RSAPublicKey *key,
                const uint8_t *hash,
                const unsigned int hash_len) {
     uint8_t buf[RSANUMBYTES];
-    int i;
     const uint8_t* padding_hash;
 
     if (key->len != RSANUMWORDS) {
@@ -272,14 +273,16 @@ int RSA_verify(const RSAPublicKey *key,
         return 0;  // Unsupported exponent.
     }
 
-    for (i = 0; i < len; ++i) {  // Copy input to local workspace.
+    for (unsigned int i = 0; i < len; ++i) {  // Copy input to local workspace.
         buf[i] = signature[i];
     }
 
     modpow(key, buf);  // In-place exponentiation.
 
+    static_assert((RSANUMBYTES >= SHA_DIGEST_SIZE) && (RSANUMBYTES >= SHA256_DIGEST_SIZE), "hash can't fit in buf");
+
     // Xor sha portion, so it all becomes 00 iff equal.
-    for (i = len - hash_len; i < len; ++i) {
+    for (unsigned int i = len - hash_len; i < len; ++i) {
         buf[i] ^= *hash++;
     }
 
@@ -298,7 +301,7 @@ int RSA_verify(const RSAPublicKey *key,
     }
 
     // Compare against expected hash value.
-    for (i = 0; i < hash_len; ++i) {
+    for (unsigned int i = 0; i < hash_len; ++i) {
         if (buf[i] != padding_hash[i]) {
             return 0;
         }
