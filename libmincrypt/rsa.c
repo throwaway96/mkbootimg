@@ -248,9 +248,9 @@ static const uint8_t kExpectedPadSha256Rsa2048[SHA256_DIGEST_SIZE] = {
 // Returns 1 on successful verification, 0 on failure.
 int RSA_verify(const RSAPublicKey *key,
                const uint8_t *signature,
-               const int len,
+               const unsigned int len,
                const uint8_t *hash,
-               const int hash_len) {
+               const unsigned int hash_len) {
     uint8_t buf[RSANUMBYTES];
     int i;
     const uint8_t* padding_hash;

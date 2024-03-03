@@ -47,9 +47,9 @@ typedef struct RSAPublicKey {
 
 int RSA_verify(const RSAPublicKey *key,
                const uint8_t* signature,
-               const int len,
+               const unsigned int len,
                const uint8_t* hash,
-               const int hash_len);
+               const unsigned int hash_len);
 
 #ifdef __cplusplus
 }
