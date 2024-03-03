@@ -12,7 +12,7 @@ RM = del
 CP = copy /y
 endif
 
-CFLAGS += -ffunction-sections -O3
+CFLAGS += -ffunction-sections -O3 -ggdb -Wall
 
 INC = -I.
 
